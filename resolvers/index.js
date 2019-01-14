@@ -79,10 +79,8 @@ module.exports = {
             // 5. Return user data and their token
             return { user, token: access_token }
         },
-        addFakeUsers: async (root, {count}, {db}) => {
-
+        addFakeUsers: async (root, {count}, {db, pubsub}) => {
             var { results } = await generateFakeUsers(count)
-
             var users = results.map(r => ({
                 githubLogin: r.login.username,
                 name: `${r.name.first} ${r.name.last}`,
@@ -90,8 +88,7 @@ module.exports = {
                 githubToken: r.login.sha1
             }))
 
-            await db.collection('users').insert(users)
-
+            await db.collection('users').insertMany(users)
             var newUsers = await db.collection('users')
                 .find()
                 .sort({ _id: -1 })
