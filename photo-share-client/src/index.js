@@ -2,8 +2,23 @@ import React from 'react'
 import { render } from 'react-dom'
 import App from './App'
 import { ApolloProvider } from 'react-apollo'
-import ApolloClient, { InMemoryCache } from 'apollo-boost'
+import ApolloClient from 'apollo-boost'
 import { persistCache } from 'apollo-cache-persist'
+import {
+    InMemoryCache,
+    HttpLink,
+    ApolloLink,
+    split
+} from 'apollo-boost'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
+
+const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' })
+const wsLink = new WebSocketLink({
+    uri: `ws://localhost:4000/graphql`,
+    options: { reconnect: true }
+})
+
 
 const cache = new InMemoryCache()
 persistCache({

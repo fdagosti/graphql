@@ -24,7 +24,7 @@ module.exports = {
                 .toArray()
     },
     Mutation: {
-        async postPhoto(parent, args, { db, currentUser }) {
+        async postPhoto(parent, args, { db, currentUser, pubsub }) {
 
             // 1. If there is not a user in context, throw an error
             if (!currentUser) {
@@ -41,6 +41,9 @@ module.exports = {
             const { insertedId } = await db.collection('photos').insertOne(newPhoto)
 
             newPhoto.id = insertedId.toString()
+
+            //console.log("publischin ", newPhoto, pubsub)
+            pubsub.publish('photo-added', { newPhoto })
 
             return newPhoto
 
@@ -89,6 +92,14 @@ module.exports = {
 
             await db.collection('users').insert(users)
 
+            var newUsers = await db.collection('users')
+                .find()
+                .sort({ _id: -1 })
+                .limit(count)
+                .toArray()
+
+            newUsers.forEach(newUser => pubsub.publish('user-added', {newUser}))
+
             return users
         },
         async fakeUserAuth (parent, { githubLogin }, { db }) {
@@ -104,6 +115,18 @@ module.exports = {
                 user
             }
 
+        }
+    },
+    Subscription: {
+        newPhoto: {
+            subscribe: (parent, args, { pubsub }) => {
+                console.log("subscribe ")
+                return pubsub.asyncIterator('photo-added')
+            }
+
+        },
+        newUser: {
+            subscribe: (parent, args, { pubsub }) => pubsub.asyncIterator('user-added')
         }
     },
     Photo: {

@@ -43,7 +43,7 @@ input PostPhotoInput {
 type Query {
     me: User
     totalPhotos: Int!
-    allPhotos(after: DateTime): [Photo!]!
+     allPhotos(after: DateTime): [Photo!]!
     totalUsers: Int!
     allUsers: [User!]!
 }
@@ -54,4 +54,9 @@ type Mutation {
     githubAuth(code: String!): AuthPayload!
     fakeUserAuth(githubLogin: ID!): AuthPayload!
     addFakeUsers(count: Int = 1): [User!]!
+}
+
+type Subscription {
+    newPhoto: Photo!
+    newUser: User!
 }
