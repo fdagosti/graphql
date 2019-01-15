@@ -52,6 +52,7 @@ type Query {
 # 3. Return the newly posted photo from the mutation
 type Mutation {
     postPhoto(input: PostPhotoInput!): Photo!
+    tagPhoto(githubLogin:ID! photoID:ID!): Photo!
     githubAuth(code: String!): AuthPayload!
     fakeUserAuth(githubLogin: ID!): AuthPayload!
     addFakeUsers(count: Int = 1): [User!]!
