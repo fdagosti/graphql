@@ -13,15 +13,6 @@ const POST_PHOTO_MUTATION = gql`
     }
 `
 
-const updatePhotos = (cache, { data:{ postPhoto } }) => {
-    var data = cache.readQuery({ query: ROOT_QUERY })
-    data.allPhotos = [
-        postPhoto,
-        ...data.allPhotos
-    ]
-    cache.writeQuery({ query: ROOT_QUERY, data })
-}
-
 export default class PostPhoto extends Component {
 
     state = {
@@ -89,8 +80,7 @@ export default class PostPhoto extends Component {
                            })} />
 
                 <div style={{ margin: '10px' }}>
-                    <Mutation mutation={POST_PHOTO_MUTATION}
-                              update={updatePhotos}>
+                    <Mutation mutation={POST_PHOTO_MUTATION}>
                         {mutation =>
                             <button onClick={() => this.postPhoto(mutation)}>
                                 Post Photo
