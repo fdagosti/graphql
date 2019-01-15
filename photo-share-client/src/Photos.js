@@ -2,6 +2,8 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import { ROOT_QUERY } from './App'
 
+const API_HOST = "http://localhost:4000"
+
 const Photos = () =>
     <Query query={ROOT_QUERY}>
         {({loading, data}) => loading ?
@@ -9,7 +11,7 @@ const Photos = () =>
             data.allPhotos.map(photo =>
                 <img
                     key={photo.id}
-                    src={photo.url}
+                    src={API_HOST + photo.url}
                     alt={photo.name}
                     width={350} />
 

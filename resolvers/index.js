@@ -44,10 +44,11 @@ module.exports = {
             newPhoto.id = insertedId.toString()
 
             var toPath = path.join(
-                __dirname, '..', 'assets', 'photos', `${photo.id}.jpg`
+                __dirname, '..', 'assets', 'photos', `${newPhoto.id}.jpg`
             )
 
-            const { stream } = args.input.file
+            const { stream } = await args.input.file
+
             await uploadStream(stream, toPath)
 
             pubsub.publish('photo-added', { newPhoto })

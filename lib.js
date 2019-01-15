@@ -1,4 +1,6 @@
 const fetch = require('node-fetch')
+const fs = require('fs')
+
 
 const generateFakeUsers = count =>
     fetch(`https://randomuser.me/api/?results=${count}`)

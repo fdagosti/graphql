@@ -1,4 +1,26 @@
 import React, { Component } from 'react'
+import { Mutation } from 'react-apollo'
+import { gql } from 'apollo-boost'
+import { ROOT_QUERY } from './App'
+
+const POST_PHOTO_MUTATION = gql`
+    mutation postPhoto($input: PostPhotoInput!) {
+        postPhoto(input:$input) {
+            id
+            name
+            url
+        }
+    }
+`
+
+const updatePhotos = (cache, { data:{ postPhoto } }) => {
+    var data = cache.readQuery({ query: ROOT_QUERY })
+    data.allPhotos = [
+        postPhoto,
+        ...data.allPhotos
+    ]
+    cache.writeQuery({ query: ROOT_QUERY, data })
+}
 
 export default class PostPhoto extends Component {
 
@@ -9,10 +31,16 @@ export default class PostPhoto extends Component {
         file: ''
     }
 
-    postPhoto = (mutation) => {
-        console.log('todo: post photo')
-        console.log(this.state)
+    postPhoto = async (mutation) => {
+        await mutation({
+            variables: {
+                input: this.state
+            }
+        }).catch(console.error)
+        this.props.history.replace('/')
     }
+
+
 
     render() {
         return (
@@ -61,9 +89,14 @@ export default class PostPhoto extends Component {
                            })} />
 
                 <div style={{ margin: '10px' }}>
-                    <button onClick={() => this.postPhoto()}>
-                        Post Photo
-                    </button>
+                    <Mutation mutation={POST_PHOTO_MUTATION}
+                              update={updatePhotos}>
+                        {mutation =>
+                            <button onClick={() => this.postPhoto(mutation)}>
+                                Post Photo
+                            </button>
+                        }
+                    </Mutation>
                     <button onClick={() => this.props.history.goBack()}>
                         Cancel
                     </button>
