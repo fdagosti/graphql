@@ -4,7 +4,7 @@ const expressPlayground = require('graphql-playground-middleware-express').defau
 const { readFileSync } = require('fs')
 const { MongoClient } = require('mongodb')
 const { createServer } = require('http')
-
+const path = require('path')
 
 require('dotenv').config()
 
@@ -44,6 +44,11 @@ async function start() {
     })
 
     server.applyMiddleware({ app })
+
+    app.use(
+        '/img/photos',
+        express.static(path.join(__dirname, 'assets', 'photos'))
+    )
 
     app.get('/', (req, res) => {
         let url = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&scope=user`

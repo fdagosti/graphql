@@ -1,8 +1,10 @@
 import React from 'react'
-import {Component} from 'react'
-import Users from './Users'
-import { BrowserRouter } from 'react-router-dom'
+import {Component, Fragment} from 'react'
+import { BrowserRouter , Switch, Route} from 'react-router-dom'
 import { gql } from 'apollo-boost'
+import Users from './Users'
+import Photos from './Photos'
+import PostPhoto from './PostPhoto'
 import AuthorizedUser from './AuthorizedUser'
 import { withApollo } from 'react-apollo'
 
@@ -11,6 +13,11 @@ export const ROOT_QUERY = gql`
         totalUsers
         allUsers { ...userInfo }
         me { ...userInfo }
+        allPhotos {
+            id
+            name
+            url
+        }
     }
 
     fragment userInfo on User {
@@ -52,12 +59,21 @@ class App extends Component {
     }
 
     render(){
-        return <BrowserRouter>
-            <div>
-                <AuthorizedUser />
-                <Users />
-            </div>
-        </BrowserRouter>
+        return (
+            <BrowserRouter>
+                <Switch>
+                    <Route exact path="/" component={() =>
+                        <Fragment>
+                            <AuthorizedUser />
+                            <Users />
+                            <Photos />
+                        </Fragment>
+                    } />
+                    <Route path="/newPhoto" component={PostPhoto} />
+                    <Route component={({ location }) => <h1>"{location.pathname}" not found</h1>} />
+                </Switch>
+            </BrowserRouter>
+        )
     }
 }
 

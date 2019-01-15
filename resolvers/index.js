@@ -1,5 +1,7 @@
 const { GraphQLScalarType } = require('graphql')
 const { authorizeWithGithub, generateFakeUsers } = require('../lib')
+const { uploadStream } = require('../lib')
+const path = require('path')
 require('dotenv').config()
 
 module.exports = {
@@ -9,8 +11,7 @@ module.exports = {
             db.collection('photos')
                 .estimatedDocumentCount(),
 
-        allPhotos: (parent, args, { db }) =>
-            db.collection('photos')
+        allPhotos: (parent, args, { db }) =>db.collection('photos')
                 .find()
                 .toArray(),
 
@@ -42,7 +43,13 @@ module.exports = {
 
             newPhoto.id = insertedId.toString()
 
-            //console.log("publischin ", newPhoto, pubsub)
+            var toPath = path.join(
+                __dirname, '..', 'assets', 'photos', `${photo.id}.jpg`
+            )
+
+            const { stream } = args.input.file
+            await uploadStream(stream, toPath)
+
             pubsub.publish('photo-added', { newPhoto })
 
             return newPhoto
@@ -127,7 +134,7 @@ module.exports = {
         }
     },
     Photo: {
-        id: parent => parent.id || parent._id,
+        id: parent => parent.id || parent._id.toString(),
         url: parent => `/img/photos/${parent._id}.jpg`,
         postedBy: (parent, args, { db }) =>
             db.collection('users').findOne({ githubLogin: parent.userID }),
