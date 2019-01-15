@@ -5,6 +5,8 @@ const { readFileSync } = require('fs')
 const { MongoClient } = require('mongodb')
 const { createServer } = require('http')
 const path = require('path')
+const depthLimit = require('graphql-depth-limit')
+const { createComplexityLimitRule } = require('graphql-validation-complexity')
 
 require('dotenv').config()
 
@@ -30,6 +32,13 @@ async function start() {
     const server = new ApolloServer({
         typeDefs,
         resolvers,
+        engine: true,
+        validationRules: [
+            depthLimit(5),
+            createComplexityLimitRule(1200, {
+                onCost: cost => console.log('query cost: ', cost)
+            })
+        ],
         context : async ({req, connection}) => {
             const githubToken = req ?
                 req.headers.authorization :

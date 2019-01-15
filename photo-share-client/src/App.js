@@ -37,6 +37,16 @@ const LISTEN_FOR_USERS = gql`
     }
 `
 
+const LISTEN_FOR_PHOTOS = gql`
+    subscription {
+        newPhoto {
+            id
+            name
+            url
+        }
+    }
+`
+
 class App extends Component {
 
     componentDidMount() {
@@ -52,10 +62,23 @@ class App extends Component {
                 ]
                 client.writeQuery({ query: ROOT_QUERY, data })
             })
+
+        this.listenForPhotos = client
+            .subscribe({ query: LISTEN_FOR_PHOTOS })
+            .subscribe(({ data:{ newPhoto } }) => {
+                const data = client.readQuery({ query: ROOT_QUERY })
+                data.totalPhotos += 1
+                data.allPhotos = [
+                    ...data.allPhotos,
+                    newPhoto
+                ]
+                client.writeQuery({ query: ROOT_QUERY, data })
+            })
     }
 
     componentWillUnmount() {
         this.listenForUsers.unsubscribe()
+        this.listenForPhotos.unsubscribe()
     }
 
     render(){
