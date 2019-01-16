@@ -12,12 +12,13 @@ import {
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 import { createUploadLink } from 'apollo-upload-client'
+import {environment} from './environment'
 
 const httpLink = createUploadLink({
-    uri: 'http://localhost:4000/graphql'
+    uri: environment.backendAPIUrl
 })
 const wsLink = new WebSocketLink({
-    uri: `ws://localhost:4000/graphql`,
+    uri: environment.backendSubsUrl,
     options: { reconnect: true }
 })
 

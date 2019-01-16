@@ -1,8 +1,9 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import { ROOT_QUERY } from './App'
+import {environment} from './environment'
 
-const API_HOST = "http://localhost:4000"
+const API_HOST = environment.backendUrl
 
 const Photos = () =>
     <Query query={ROOT_QUERY}>
