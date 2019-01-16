@@ -3,6 +3,7 @@ import {withRouter, NavLink} from 'react-router-dom'
 import { Query, Mutation, withApollo, compose } from 'react-apollo'
 import {gql} from 'apollo-boost'
 import {ROOT_QUERY} from './App'
+import {environment} from './environment'
 
 const GITHUB_AUTH_MUTATION = gql`
     mutation githubAuth($code:String!) {
@@ -51,7 +52,7 @@ class AuthorizedUser extends Component {
     }
 
     requestCode() {
-        var clientID = "3f53bc1a3b4d71d94d15"
+        var clientID = environment.githubClientId
         window.location =
             `https://github.com/login/oauth/authorize?client_id=${clientID}&scope=user`
     }
