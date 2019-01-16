@@ -164,7 +164,7 @@ const server = new ApolloServer({
 
 ```
 
-### security & query limits
+### Security & query limits
 Because GraphQL is an API allowing undirected graphs, it can potentially yield to very deep and complex queries. Usually the backend will put a limit on the complexity of the query to avoid the backend to crash
 
 This is also a matter of security. You can specify the *query complexity* or the *query depth* on the server to reject queries which are too complex:
@@ -181,6 +181,12 @@ validationRules: [
 
 ```
 
-### apollo engine: analytics and metrics
+### Apollo engine: analytics and metrics
 
 Finally, apollo engine is enabled in the app (you will need to setup your own apollo engine api key in case you want to test it manually)
+
+Apollo engine provides a collection of metrics on your GraphQL backend with performance metrics, security issues.
+
+![apollo-engine screenshot](apollo-engine.png)
+
+This is a must have when you are serious about working in GraphQL
