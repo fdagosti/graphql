@@ -70,7 +70,7 @@ npm install
 npm start
 ```
 
-To run the app locally, you'll need to manually update the `environment.ts` file to export the dev URLs on it:
+To run the app locally, you'll need to manually update the [environment.ts](photo-share-client/src/environment.js) file to export the dev URLs on it:
 
 ```javascript
 const prod_environment = {
@@ -173,11 +173,11 @@ In the application, there is a depth limit of 5 and a query complexity of 1200. 
 
 ```javascript
 validationRules: [
-            depthLimit(5),
-            createComplexityLimitRule(1200, {
-                onCost: cost => console.log('query cost: ', cost)
-            })
-        ],
+    depthLimit(5),
+    createComplexityLimitRule(1200, {
+        onCost: cost => console.log('query cost: ', cost)
+    })
+],
 
 ```
 
