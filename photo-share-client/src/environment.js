@@ -2,7 +2,7 @@ export const environment = {
     production: true,
     backendUrl: "https://photo-graphql.herokuapp.com",
     backendAPIUrl: "https://photo-graphql.herokuapp.com/graphql",
-    backendSubsUrl: "ws://photo-graphql.herokuapp.com/graphql"
+    backendSubsUrl: "wss://photo-graphql.herokuapp.com/graphql"
 }
 
 const dev_environment = {
