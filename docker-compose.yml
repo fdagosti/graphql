@@ -1,0 +1,41 @@
+version: "2"
+services:
+  client:
+    build: ./photo-share-client
+    restart: always
+    ports:
+        - "3000:3000"
+    volumes:
+        - ./photo-share-client:/client
+        - /photo-share-client/node_modules
+    links:
+        - api
+    networks:
+        - webappnetwork
+  api:
+    build: ./photo-share-api
+    restart: always
+    ports:
+        - "4000:4000"
+    volumes:
+        - ./photo-share-api:/api
+        - /photo-share-api/node_modules
+    depends_on:
+        - mongodb
+    networks:
+        - webappnetwork
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: mongodb
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --noauth --smallfiles 
+    networks: 
+      - webappnetwork
+
+networks:
+    webappnetwork:
+        driver: bridge
